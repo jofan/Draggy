@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  
+    <title>Draggy example</title>
+
+    <style type="text/css" media="screen">
+      #eventarea { height:300px; widht:800px; background-color:#bbb; }
+      .drag-obj {
+        position:absolute;
+        cursor:move;
+      }
+      #dragele {
+        background-color:yellow;
+        top:100px;
+        left:200px;
+        width:100px;
+        height:100px;
+      }
+      #dragele2 {
+        background-color:red;
+        top:150px;
+        left:250px;
+        width:100px;
+        height:100px;
+      }
+    </style>
+    
+  </head>
+  <body>
+    <h1>Drag and drop elements</h1>
+
+    <div id="eventarea"></div>
+    <div id="resultarea"></div>
+    <div id="dragele" class="drag-obj"></div>
+    <div id="dragele2" class="drag-obj"></div>
+
+    <script src="../src/draggy.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+      (function() {
+        window.drag_demo = new Draggy('dragele');
+        window.drag_demo2 = new Draggy('dragele2');
+      })();
+    </script>
+  </body>
+</html>
