@@ -40,7 +40,7 @@
     <script type="text/javascript" charset="utf-8">
       (function() {
         window.drag_demo = new Draggy('dragele');
-        window.drag_demo2 = new Draggy('dragele2');
+        window.drag_demo2 = new Draggy('dragele2', function(ele, x, y) {}, {restrictY:true});
       })();
     </script>
   </body>
