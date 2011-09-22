@@ -26,21 +26,48 @@
     return [curleft,curtop];
   }
 
-  window.Draggy = function(id) {
+  window.Draggy = function(id, onChange, config) {
+    this.config = config || {};
     this.ele = d.getElementById(id);
+    this.ele.onChange = onChange || function() {};
+    this.ele.restrictX = this.config.restrictX || false;
+    this.ele.restrictY = this.config.restrictY || false;
+    this.ele.limitsX = this.config.limitsX || false;
+    this.ele.limitsY = this.config.limitsY || false;
+    this.ele.xFromOrigin = 0;
+    this.ele.yFromOrigin = 0;
     this.ele.addEventListener(events.start, this.dragStart);
-    this.originalPosition = getPosition(this.ele);
+    this.ele.originalPosition = getPosition(this.ele);
+    this.initElement();
   };
 
   Draggy.prototype = {
+    initElement: function() {
+      this.ele.moveX = function(ele, evt) {
+        var ele = ele || this;
+        var movedX, movedY;
+        movedX = evt.clientX - posX;
+        ele.directionX = (movedX > 0 ? 'right' : 'left');
+        if (ele.directionX !== 'left' && self.xFromOrigin >= 0) {
+          newX = currX + movedX;
+          ele.style.left = newX + 'px';
+          currX = newX;
+          posX = evt.clientX;
+        }
+      };
+    },
     dragStart: function(e) {
       this.position = getPosition(this);
+      this.directionX = null;
+      this.directionY = null;
+      // Initial element position
       var currX = this.position[0];
       var currY = this.position[1];
+      // Initial mouse/touch position
       var posX = e.clientX;
       var posY = e.clientY;
       var newX, newY;
-      var self = this;
+      var self = this; // The DOM element
 
       this.style.zIndex = '999';
       d.body.style.webkitUserSelect = 'none';
@@ -48,25 +75,35 @@
       d.addEventListener(events.move, dragMove);
       d.addEventListener(events.end, dragEnd);
 
-      console.log('Starting drag');
-    
       function dragMove (e) {
+        var movedX, movedY;
+        if (!self.restrictX) {
+          movedX = e.clientX - posX;
+          self.directionX = (movedX > 0 ? 'right' : 'left');
+          self.moveX();
+          if (self.directionX !== 'left' && self.xFromOrigin >= 0) {
+            newX = currX + movedX;
+            self.style.left = newX + 'px';
+            currX = newX;
+            posX = e.clientX;
+          }
+        }
+        if (!self.restrictY) {
+          newY = currY + (e.clientY - posY);
+          self.style.top = newY + 'px';
+          currY = newY;
+          posY = e.clientY;
+        }
+        self.xFromOrigin = currX - self.originalPosition[0];
+        self.yFromOrigin = currY - self.originalPosition[1];
+        self.onChange(self, currX, currY);
         // Get the new coordinates
-        newX = currX + (e.clientX - posX);
-        newY = currY + (e.clientY - posY);
         // Set the new coordinates
-        self.style.top = newY + 'px';
-        self.style.left = newX + 'px';
         // Update current coordinates to new position
-        currX = newX;
-        currY = newY;
         // Set current mouse/touch position
-        posX = e.clientX;
-        posY = e.clientY;
       }
 
       function dragEnd (e) {
-        console.log('Dropping element...');
         self.position = [currX, currY];
         self.style.zIndex = '';
         d.body.style.webkitUserSelect = '';
@@ -83,9 +120,9 @@
     },
 
     reset: function() {
-      this.ele.style.top = this.originalPosition[1] + 'px';
-      this.ele.style.left = this.originalPosition[0] + 'px';
-      this.ele.position = this.originalPosition;
+      this.ele.style.top = this.ele.originalPosition[1] + 'px';
+      this.ele.style.left = this.ele.originalPosition[0] + 'px';
+      this.ele.position = this.ele.originalPosition;
     }
   };
 })();
