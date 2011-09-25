@@ -14,6 +14,7 @@
       events = isTouch ? touchEvents : mouseEvents;
 
   // PPK script for getting position of element
+  // http://www.quirksmode.org/js/findpos.html
   function getPosition(ele) {
     var curleft = 0;
     var curtop = 0;
@@ -32,10 +33,9 @@
     this.ele.onChange = onChange || function() {};
     this.ele.restrictX = this.config.restrictX || false;
     this.ele.restrictY = this.config.restrictY || false;
-    this.ele.limitsX = this.config.limitsX || false;
-    this.ele.limitsY = this.config.limitsY || false;
-    this.ele.xFromOrigin = 0;
-    this.ele.yFromOrigin = 0;
+    this.ele.limitsX = this.config.limitsX || [-9999, 9999];
+    this.ele.limitsY = this.config.limitsY || [-9999, 9999];
+    this.ele.fromOrigin = [0, 0];
     this.ele.addEventListener(events.start, this.dragStart);
     this.ele.originalPosition = getPosition(this.ele);
     this.initElement();
@@ -43,23 +43,17 @@
 
   Draggy.prototype = {
     initElement: function() {
-      this.ele.moveX = function(ele, evt) {
-        var ele = ele || this;
-        var movedX, movedY;
-        movedX = evt.clientX - posX;
-        ele.directionX = (movedX > 0 ? 'right' : 'left');
-        if (ele.directionX !== 'left' && self.xFromOrigin >= 0) {
-          newX = currX + movedX;
-          ele.style.left = newX + 'px';
-          currX = newX;
-          posX = evt.clientX;
-        }
-      };
     },
     dragStart: function(e) {
       this.position = getPosition(this);
-      this.directionX = null;
-      this.directionY = null;
+      var restrictX = this.restrictX;
+      var restrictY = this.restrictY;
+      var limitsX = this.limitsX;
+      var limitsY = this.limitsY;
+      var originalX = this.originalPosition[0];
+      var originalY = this.originalPosition[1];
+      var relativeX = 0;
+      var relativeY = 0;
       // Initial element position
       var currX = this.position[0];
       var currY = this.position[1];
@@ -76,35 +70,38 @@
       d.addEventListener(events.end, dragEnd);
 
       function dragMove (e) {
-        var movedX, movedY;
-        if (!self.restrictX) {
+        var movedX, movedY, relX, relY;
+        if (!restrictX) {
+          // Mouse movement (x axis) in px
           movedX = e.clientX - posX;
-          self.directionX = (movedX > 0 ? 'right' : 'left');
-          self.moveX();
-          if (self.directionX !== 'left' && self.xFromOrigin >= 0) {
-            newX = currX + movedX;
+          // New pixel value (x axis) of element
+          newX = currX + movedX;
+          // How many pixels element has moved (x axis) from original position
+          relX = newX - originalX;
+          if (relX >= limitsX[0] && relX <= limitsX[1]) {
             self.style.left = newX + 'px';
             currX = newX;
             posX = e.clientX;
+            relativeX = relX;
           }
         }
-        if (!self.restrictY) {
-          newY = currY + (e.clientY - posY);
-          self.style.top = newY + 'px';
-          currY = newY;
-          posY = e.clientY;
+        if (!restrictY) {
+          movedY = e.clientY - posY;
+          newY = currY + movedY;
+          relY = newY - originalY;
+          if (relY >= limitsY[0] && relY <= limitsY[1]) {
+            self.style.top = newY + 'px';
+            currY = newY;
+            posY = e.clientY;
+            relativeY = relY;
+          }
         }
-        self.xFromOrigin = currX - self.originalPosition[0];
-        self.yFromOrigin = currY - self.originalPosition[1];
-        self.onChange(self, currX, currY);
-        // Get the new coordinates
-        // Set the new coordinates
-        // Update current coordinates to new position
-        // Set current mouse/touch position
+        self.onChange(self, [currX, currY], [relativeX, relativeY]);
       }
 
       function dragEnd (e) {
         self.position = [currX, currY];
+        self.fromOrigin = [relativeX, relativeY];
         self.style.zIndex = '';
         d.body.style.webkitUserSelect = '';
         d.removeEventListener(events.move, dragMove);
@@ -114,15 +111,19 @@
     },
 
     moveTo: function(x,y) {
+      var xFromOrigin = x - this.ele.originalPosition[0];
+      var yFromOrigin = y - this.ele.originalPosition[1];
       this.ele.style.top = y + 'px';
       this.ele.style.left = x + 'px';
       this.ele.position = [x,y];
+      this.ele.fromOrigin = [xFromOrigin, yFromOrigin];
     },
 
     reset: function() {
       this.ele.style.top = this.ele.originalPosition[1] + 'px';
       this.ele.style.left = this.ele.originalPosition[0] + 'px';
       this.ele.position = this.ele.originalPosition;
+      this.ele.fromOrigin = [0, 0];
     }
   };
 })();
