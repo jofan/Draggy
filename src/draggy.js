@@ -1,3 +1,7 @@
+/**
+* Draggy - a CSS3 based (translate3d) drag & drop microlibrary
+* TODO: Support browsers other than webkit, that supports translate3d
+**/
 (function() {
   var d = document,
       isTouch = 'ontouchstart' in window,
@@ -13,55 +17,36 @@
       },
       events = isTouch ? touchEvents : mouseEvents;
 
-  // PPK script for getting position of element
-  // http://www.quirksmode.org/js/findpos.html
-  function getPosition(ele) {
-    var curleft = 0;
-    var curtop = 0;
-    if (ele.offsetParent) {
-      do {
-        curleft += ele.offsetLeft;
-        curtop += ele.offsetTop;
-      } while (ele = ele.offsetParent);
-    }
-    return [curleft,curtop];
-  }
-
   window.Draggy = function(id, onChange, config) {
     this.config = config || {};
     this.ele = d.getElementById(id);
     this.ele.onChange = onChange || function() {};
+    this.ele.position = [0, 0];
     this.ele.restrictX = this.config.restrictX || false;
     this.ele.restrictY = this.config.restrictY || false;
     this.ele.limitsX = this.config.limitsX || [-9999, 9999];
     this.ele.limitsY = this.config.limitsY || [-9999, 9999];
-    this.ele.fromOrigin = [0, 0];
-    this.ele.addEventListener(events.start, this.dragStart);
-    this.ele.originalPosition = getPosition(this.ele);
-    this.initElement();
+    this.enable();
   };
 
   Draggy.prototype = {
-    initElement: function() {
+    disable: function() {
+      this.ele.removeEventListener(events.start, this.dragStart);
+    },
+    enable: function() {
+      this.ele.addEventListener(events.start, this.dragStart);
     },
     dragStart: function(e) {
-      this.position = getPosition(this);
-      var restrictX = this.restrictX;
-      var restrictY = this.restrictY;
-      var limitsX = this.limitsX;
-      var limitsY = this.limitsY;
-      var originalX = this.originalPosition[0];
-      var originalY = this.originalPosition[1];
-      var relativeX = 0;
-      var relativeY = 0;
-      // Initial element position
-      var currX = this.position[0];
-      var currY = this.position[1];
-      // Initial mouse/touch position
-      var posX = e.clientX;
-      var posY = e.clientY;
-      var newX, newY;
-      var self = this; // The DOM element
+      var restrictX = this.restrictX,
+          restrictY = this.restrictY,
+          limitsX = this.limitsX,
+          limitsY = this.limitsY,
+          relativeX = this.position[0],
+          relativeY = this.position[1],
+          posX = isTouch ? e.touches[0].pageX : e.clientX,
+          posY = isTouch ? e.touches[0].pageY : e.clientY,
+          newX, newY,
+          self = this; // The DOM element
 
       this.style.zIndex = '999';
       d.body.style.webkitUserSelect = 'none';
@@ -70,38 +55,35 @@
       d.addEventListener(events.end, dragEnd);
 
       function dragMove (e) {
+        e.preventDefault();
         var movedX, movedY, relX, relY;
+        var clientX = isTouch ? e.touches[0].pageX : e.clientX;
+        var clientY = isTouch ? e.touches[0].pageY : e.clientY;
         if (!restrictX) {
           // Mouse movement (x axis) in px
-          movedX = e.clientX - posX;
+          movedX = clientX - posX;
           // New pixel value (x axis) of element
-          newX = currX + movedX;
-          // How many pixels element has moved (x axis) from original position
-          relX = newX - originalX;
-          if (relX >= limitsX[0] && relX <= limitsX[1]) {
-            self.style.left = newX + 'px';
-            currX = newX;
-            posX = e.clientX;
-            relativeX = relX;
+          newX = relativeX + movedX;
+          if (newX >= limitsX[0] && newX <= limitsX[1]) {
+            posX = clientX;
+            relativeX = newX;
           }
         }
         if (!restrictY) {
-          movedY = e.clientY - posY;
-          newY = currY + movedY;
-          relY = newY - originalY;
-          if (relY >= limitsY[0] && relY <= limitsY[1]) {
-            self.style.top = newY + 'px';
-            currY = newY;
-            posY = e.clientY;
-            relativeY = relY;
+          movedY = clientY - posY;
+          newY = relativeY + movedY;
+          if (newY >= limitsY[0] && newY <= limitsY[1]) {
+            posY = clientY;
+            relativeY = newY;
           }
         }
-        self.onChange(self, [currX, currY], [relativeX, relativeY]);
+        self.position = [relativeX, relativeY];
+        self.style.cssText = 'z-index:999;-webkit-transform:translate3d(' + relativeX + 'px,' + relativeY + 'px, 0);';
+        // Send coordinates to onChange method
+        self.onChange(relativeX, relativeY);
       }
 
       function dragEnd (e) {
-        self.position = [currX, currY];
-        self.fromOrigin = [relativeX, relativeY];
         self.style.zIndex = '';
         d.body.style.webkitUserSelect = '';
         d.removeEventListener(events.move, dragMove);
@@ -111,19 +93,13 @@
     },
 
     moveTo: function(x,y) {
-      var xFromOrigin = x - this.ele.originalPosition[0];
-      var yFromOrigin = y - this.ele.originalPosition[1];
-      this.ele.style.top = y + 'px';
-      this.ele.style.left = x + 'px';
+      this.ele.style.cssText = '-webkit-transform:translate3d(' + x + 'px,' + y + 'px, 0);';
       this.ele.position = [x,y];
-      this.ele.fromOrigin = [xFromOrigin, yFromOrigin];
     },
 
     reset: function() {
-      this.ele.style.top = this.ele.originalPosition[1] + 'px';
-      this.ele.style.left = this.ele.originalPosition[0] + 'px';
-      this.ele.position = this.ele.originalPosition;
-      this.ele.fromOrigin = [0, 0];
+      this.ele.style.cssText = '-webkit-transform:translate3d(0, 0, 0);';
+      this.ele.position = [0,0];
     }
   };
 })();
