@@ -1,7 +1,14 @@
 /**
-* Draggy - a CSS3 based (translate3d) drag & drop microlibrary
-* TODO: Support browsers other than webkit, that supports translate3d
-**/
+ * draggy.js
+ *
+ * A JavaScript microlibrary for moving elements in Webkit browsers.
+ *
+ * @author     Stefan Liden
+ * @version    0.2
+ * @copyright  Copyright 2011 Stefan Liden
+ * @license    Dual licensed under MIT and GPL
+ */
+ 
 (function() {
   var d = document,
       isTouch = 'ontouchstart' in window,
@@ -17,25 +24,46 @@
       },
       events = isTouch ? touchEvents : mouseEvents;
 
+  window.onDrag = d.createEvent('UIEvents');
+  window.onDrop = d.createEvent('UIEvents');
+  onDrag.initEvent('onDrag', true, true);
+  onDrop.initEvent('onDrop', true, true);
+
+
   window.Draggy = function(id, onChange, config) {
+    this.id = id;
+    this.onChange = onChange || function() {};
     this.config = config || {};
-    this.ele = d.getElementById(id);
-    this.ele.onChange = onChange || function() {};
-    this.ele.position = [0, 0];
-    this.ele.restrictX = this.config.restrictX || false;
-    this.ele.restrictY = this.config.restrictY || false;
-    this.ele.limitsX = this.config.limitsX || [-9999, 9999];
-    this.ele.limitsY = this.config.limitsY || [-9999, 9999];
-    this.enable();
+    this.position = [0,0];
+    this.init();
   };
 
   Draggy.prototype = {
+    init: function() {
+      this.ele = (typeof this.id === 'string' ? d.getElementById(this.id) : this.id);
+      this.ele.draggy = this;
+      this.ele.onChange = this.onChange;
+      this.ele.position = this.position || [0, 0];
+      this.ele.restrictX = this.config.restrictX || false;
+      this.ele.restrictY = this.config.restrictY || false;
+      this.ele.limitsX = this.config.limitsX || [-9999, 9999];
+      this.ele.limitsY = this.config.limitsY || [-9999, 9999];
+      this.enable();
+    },
+    // Reinitialize draggy object and move to saved position
+    reInit: function() {
+      this.init();
+      this.moveTo(this.ele.position[0], this.ele.position[1]);
+    },
+    // Disable the draggy object so that it can't be moved
     disable: function() {
       this.ele.removeEventListener(events.start, this.dragStart);
     },
+    // Enable the draggy object so that it can be moved
     enable: function() {
       this.ele.addEventListener(events.start, this.dragStart);
     },
+    // Get current state and prepare for moving object
     dragStart: function(e) {
       var restrictX = this.restrictX,
           restrictY = this.restrictY,
@@ -48,17 +76,18 @@
           newX, newY,
           self = this; // The DOM element
 
-      this.style.zIndex = '999';
+      util.addClass(this, 'activeDrag');
       d.body.style.webkitUserSelect = 'none';
 
       d.addEventListener(events.move, dragMove);
       d.addEventListener(events.end, dragEnd);
-
+      
+      // Move draggy object using CSS3 translate3d
       function dragMove (e) {
         e.preventDefault();
-        var movedX, movedY, relX, relY;
-        var clientX = isTouch ? e.touches[0].pageX : e.clientX;
-        var clientY = isTouch ? e.touches[0].pageY : e.clientY;
+        var movedX, movedY, relX, relY,
+            clientX = isTouch ? e.touches[0].pageX : e.clientX,
+            clientY = isTouch ? e.touches[0].pageY : e.clientY;
         if (!restrictX) {
           // Mouse movement (x axis) in px
           movedX = clientX - posX;
@@ -78,28 +107,32 @@
           }
         }
         self.position = [relativeX, relativeY];
-        self.style.cssText = 'z-index:999;-webkit-transform:translate3d(' + relativeX + 'px,' + relativeY + 'px, 0);';
-        // Send coordinates to onChange method
+        self.style.cssText = '-webkit-transform:translate3d(' + relativeX + 'px,' + relativeY + 'px, 0);';
         self.onChange(relativeX, relativeY);
+        self.dispatchEvent(onDrag);
       }
-
+      // Stop moving draggy object, save position and dispatch onDrop event
       function dragEnd (e) {
-        self.style.zIndex = '';
+        self.pointerPosition = [posX, posY];
+        self.draggy.position = self.position;
+        util.removeClass(self.draggy.ele, 'activeDrag');
         d.body.style.webkitUserSelect = '';
+        self.dispatchEvent(onDrop);
         d.removeEventListener(events.move, dragMove);
         d.removeEventListener(events.end, dragEnd);
       }
 
     },
-
+    // API method for moving the draggy object programatically
     moveTo: function(x,y) {
       this.ele.style.cssText = '-webkit-transform:translate3d(' + x + 'px,' + y + 'px, 0);';
-      this.ele.position = [x,y];
+      this.ele.position = this.position = [x,y];
     },
-
+    // API method for resetting position of draggy object
     reset: function() {
       this.ele.style.cssText = '-webkit-transform:translate3d(0, 0, 0);';
       this.ele.position = [0,0];
     }
   };
+
 })();
