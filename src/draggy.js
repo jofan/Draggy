@@ -1,14 +1,15 @@
 /**
  * draggy.js
  *
- * A JavaScript microlibrary for moving elements in Webkit browsers.
+ * A JavaScript/CSS3 microlibrary for moving elements in Webkit browsers.
+ * TODO: Support browsers other than webkit, that supports translate3d
  *
  * @author     Stefan Liden
  * @version    0.2
  * @copyright  Copyright 2011 Stefan Liden
  * @license    Dual licensed under MIT and GPL
  */
- 
+
 (function() {
   var d = document,
       isTouch = 'ontouchstart' in window,
@@ -28,7 +29,6 @@
   window.onDrop = d.createEvent('UIEvents');
   onDrag.initEvent('onDrag', true, true);
   onDrop.initEvent('onDrop', true, true);
-
 
   window.Draggy = function(id, onChange, config) {
     this.id = id;
@@ -134,5 +134,4 @@
       this.ele.position = [0,0];
     }
   };
-
 })();

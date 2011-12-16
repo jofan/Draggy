@@ -39,8 +39,8 @@
     <script src="../src/draggy.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
       (function() {
-        window.drag_demo = new Draggy('dragele');
-        window.drag_demo2 = new Draggy('dragele2', function(ele, x, y) {}, {restrictY:true});
+        window.drag_demo = new Draggy('dragele', function() {}, {limitsX: [-194, 600], limitsY: [-23, 180]} );
+        window.drag_demo2 = new Draggy('dragele2', function(ele, absCoords, relCoords) {}, {restrictY:true, limitsX: [0, 300]});
       })();
     </script>
   </body>
