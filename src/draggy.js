@@ -5,7 +5,7 @@
  * TODO: Support browsers other than webkit, that supports CSS3 translate
  *
  * @author     Stefan Liden
- * @version    0.3
+ * @version    0.4
  * @copyright  Copyright 2012 Stefan Liden
  * @license    Dual licensed under MIT and GPL
  */
@@ -32,17 +32,17 @@
   onDrag.initEvent('onDrag', true, true);
   onDrop.initEvent('onDrop', true, true);
 
-  window.Draggy = function(id, onChange, config) {
-    this.id = id;
-    this.onChange = onChange || function() {};
+  window.Draggy = function(attachTo, config) {
+    this.attachTo = attachTo;
     this.config = config || {};
+    this.onChange = config.onChange || function() {};
     this.position = [0,0];
     this.init();
   };
 
   Draggy.prototype = {
     init: function() {
-      this.ele = (typeof this.id === 'string' ? d.getElementById(this.id) : this.id);
+      this.ele = (typeof this.attachTo === 'string' ? d.getElementById(this.attachTo) : this.attachTo);
       this.ele.draggy = this;
       this.ele.onChange = this.onChange;
       this.ele.position = this.position || [0, 0];
@@ -134,4 +134,5 @@
       this.ele.position = [0,0];
     }
   };
+
 })();
