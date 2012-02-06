@@ -2,22 +2,24 @@
  * draggy.js
  *
  * A JavaScript/CSS3 microlibrary for moving elements in Webkit browsers.
- * TODO: Support browsers other than webkit, that supports translate3d
+ * TODO: Support browsers other than webkit, that supports CSS3 translate
  *
  * @author     Stefan Liden
- * @version    0.2
- * @copyright  Copyright 2011 Stefan Liden
+ * @version    0.3
+ * @copyright  Copyright 2012 Stefan Liden
  * @license    Dual licensed under MIT and GPL
  */
 
 (function() {
+  'use strict';  
+
   var d = document,
       isTouch = 'ontouchstart' in window,
       mouseEvents = {
         start: 'mousedown',
         move: 'mousemove',
         end: 'mouseup'        
-      }
+      },
       touchEvents = {
         start: 'touchstart',
         move: 'touchmove',
@@ -77,7 +79,6 @@
           self = this; // The DOM element
 
       util.addClass(this, 'activeDrag');
-      d.body.style.webkitUserSelect = 'none';
 
       d.addEventListener(events.move, dragMove);
       d.addEventListener(events.end, dragEnd);
@@ -116,7 +117,6 @@
         self.pointerPosition = [posX, posY];
         self.draggy.position = self.position;
         util.removeClass(self.draggy.ele, 'activeDrag');
-        d.body.style.webkitUserSelect = '';
         self.dispatchEvent(onDrop);
         d.removeEventListener(events.move, dragMove);
         d.removeEventListener(events.end, dragEnd);
