@@ -5,7 +5,7 @@
  * TODO: Support browsers other than webkit, that supports CSS3 translate
  *
  * @author     Stefan Liden
- * @version    0.4
+ * @version    0.5
  * @copyright  Copyright 2012 Stefan Liden
  * @license    Dual licensed under MIT and GPL
  */
@@ -125,7 +125,13 @@
     },
     // API method for moving the draggy object programatically
     moveTo: function(x,y) {
+      x = this.ele.restrictX ? 0 : x;
+      y = this.ele.restrictY ? 0 : y;
+      if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
+      if (y < this.ele.limitsY[0] || y > this.ele.limitsY[1]) { return; }
       this.ele.style.cssText = '-webkit-transform:translate3d(' + x + 'px,' + y + 'px, 0);';
+      this.ele.onChange(x, y);
+      this.ele.dispatchEvent(onDrop);
       this.ele.position = this.position = [x,y];
     },
     // API method for resetting position of draggy object
