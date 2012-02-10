@@ -5,7 +5,7 @@
  * TODO: Support browsers other than webkit, that supports CSS3 translate
  *
  * @author     Stefan Liden
- * @version    0.5
+ * @version    0.6
  * @copyright  Copyright 2012 Stefan Liden
  * @license    Dual licensed under MIT and GPL
  */
@@ -123,8 +123,24 @@
       }
 
     },
-    // API method for moving the draggy object programatically
+    // API method for moving the draggy object
+    // Position is updated
+    // Limits and restrictions are adhered to
+    // Callback is NOT called
+    // onDrop event is NOT dispatched
     moveTo: function(x,y) {
+      x = this.ele.restrictX ? 0 : x;
+      y = this.ele.restrictY ? 0 : y;
+      if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
+      if (y < this.ele.limitsY[0] || y > this.ele.limitsY[1]) { return; }
+      this.ele.style.cssText = '-webkit-transform:translate3d(' + x + 'px,' + y + 'px, 0);';
+      this.ele.position = this.position = [x,y];
+    },
+    // API method for setting the draggy object at a certain point
+    // Limits and restrictions are adhered to
+    // Callback is called
+    // onDrop event is dispatched
+    setTo: function(x,y) {
       x = this.ele.restrictX ? 0 : x;
       y = this.ele.restrictY ? 0 : y;
       if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
