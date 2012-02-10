@@ -55,7 +55,7 @@
     // Reinitialize draggy object and move to saved position
     reInit: function() {
       this.init();
-      this.moveTo(this.ele.position[0], this.ele.position[1]);
+      this.setTo(this.ele.position[0], this.ele.position[1]);
     },
     // Disable the draggy object so that it can't be moved
     disable: function() {
