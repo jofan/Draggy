@@ -102,7 +102,7 @@
     // Reinitialize draggy object and move to saved position
     reInit: function() {
       this.init();
-      this.moveTo(this.ele.position[0], this.ele.position[1]);
+      this.setTo(this.ele.position[0], this.ele.position[1]);
     },
     // Disable the draggy object so that it can't be moved
     disable: function() {
@@ -170,8 +170,24 @@
       }
 
     },
-    // API method for moving the draggy object programatically
+    // API method for moving the draggy object
+    // Position is updated
+    // Limits and restrictions are adhered to
+    // Callback is NOT called
+    // onDrop event is NOT dispatched
     moveTo: function(x,y) {
+      x = this.ele.restrictX ? 0 : x;
+      y = this.ele.restrictY ? 0 : y;
+      if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
+      if (y < this.ele.limitsY[0] || y > this.ele.limitsY[1]) { return; }
+      this.ele.style.cssText = transform.pre + x + 'px,' + y + 'px' + transform.post;
+      this.ele.position = this.position = [x,y];
+    },
+    // API method for setting the draggy object at a certain point
+    // Limits and restrictions are adhered to
+    // Callback is called
+    // onDrop event is dispatched
+    setTo: function(x,y) {
       x = this.ele.restrictX ? 0 : x;
       y = this.ele.restrictY ? 0 : y;
       if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
