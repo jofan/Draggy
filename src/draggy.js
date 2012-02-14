@@ -5,13 +5,60 @@
  * TODO: Support browsers other than webkit, that supports CSS3 translate
  *
  * @author     Stefan Liden
- * @version    0.6
+ * @version    0.7
  * @copyright  Copyright 2012 Stefan Liden
  * @license    Dual licensed under MIT and GPL
  */
 
 (function() {
-  'use strict';  
+  'use strict';
+
+  // Some simple utility function to update classes
+  var util = {
+    addClass: function(ele, classname) {
+      if (!this.hasClass(ele, classname)) {
+        ele.className += ' ' + classname;
+      }
+    },
+    hasClass: function(ele, classname) {
+      if (ele.className) {
+        return ele.className.match(new RegExp('(\\s|^)' + classname + '(\\s|$)'));
+      } else {
+        return false;
+      }
+    },
+    removeClass: function(ele, classname) {
+      var cleaned = new RegExp(new RegExp('(\\s|^)' + classname + '(\\s|$)'));
+      ele.className = ele.className.replace(cleaned, '');
+    }
+  };
+
+  // Browser compatibility
+  var transform = {}; 
+  (function() {
+    var ele = document.createElement('div');
+    if ('WebkitTransform' in ele.style) {
+      transform.pre = '-webkit-transform:translate3d(';
+      transform.post = ', 0);';
+    }
+    else if ('MozTransform' in ele.style) {
+      console.log('Eh?');
+      transform.pre = '-moz-transform:translate(';
+      transform.post = ');';
+    }
+    else if ('MsTransform' in ele.style) {
+      transform.pre = '-ms-transform:translate(';
+      transform.post = ');';
+    }
+    else if ('OTransform' in ele.style) {
+      transform.pre = '-o-transform:translate(';
+      transform.post = ');';
+    }
+    else {
+      transform.pre = 'transform:translate(';
+      transform.post = ');';
+    }
+  }()); 
 
   var d = document,
       isTouch = 'ontouchstart' in window,
@@ -55,7 +102,7 @@
     // Reinitialize draggy object and move to saved position
     reInit: function() {
       this.init();
-      this.setTo(this.ele.position[0], this.ele.position[1]);
+      this.moveTo(this.ele.position[0], this.ele.position[1]);
     },
     // Disable the draggy object so that it can't be moved
     disable: function() {
@@ -108,7 +155,7 @@
           }
         }
         self.position = [relativeX, relativeY];
-        self.style.cssText = '-webkit-transform:translate3d(' + relativeX + 'px,' + relativeY + 'px, 0);';
+        self.style.cssText = transform.pre + relativeX + 'px,' + relativeY + 'px' + transform.post;
         self.onChange(relativeX, relativeY);
         self.dispatchEvent(onDrag);
       }
@@ -123,36 +170,20 @@
       }
 
     },
-    // API method for moving the draggy object
-    // Position is updated
-    // Limits and restrictions are adhered to
-    // Callback is NOT called
-    // onDrop event is NOT dispatched
+    // API method for moving the draggy object programatically
     moveTo: function(x,y) {
       x = this.ele.restrictX ? 0 : x;
       y = this.ele.restrictY ? 0 : y;
       if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
       if (y < this.ele.limitsY[0] || y > this.ele.limitsY[1]) { return; }
-      this.ele.style.cssText = '-webkit-transform:translate3d(' + x + 'px,' + y + 'px, 0);';
-      this.ele.position = this.position = [x,y];
-    },
-    // API method for setting the draggy object at a certain point
-    // Limits and restrictions are adhered to
-    // Callback is called
-    // onDrop event is dispatched
-    setTo: function(x,y) {
-      x = this.ele.restrictX ? 0 : x;
-      y = this.ele.restrictY ? 0 : y;
-      if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
-      if (y < this.ele.limitsY[0] || y > this.ele.limitsY[1]) { return; }
-      this.ele.style.cssText = '-webkit-transform:translate3d(' + x + 'px,' + y + 'px, 0);';
+      this.ele.style.cssText = transform.pre + x + 'px,' + y + 'px' + transform.post;
       this.ele.onChange(x, y);
       this.ele.dispatchEvent(onDrop);
       this.ele.position = this.position = [x,y];
     },
     // API method for resetting position of draggy object
     reset: function() {
-      this.ele.style.cssText = '-webkit-transform:translate3d(0, 0, 0);';
+      this.ele.style.cssText = transform.pre + '0, 0' + transform.post;
       this.ele.position = [0,0];
     }
   };
