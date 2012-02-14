@@ -4,8 +4,10 @@
  * A JavaScript/CSS3 microlibrary for moving elements in Webkit browsers.
  * TODO: Support browsers other than webkit, that supports CSS3 translate
  *
+ * BROWSER SUPPORT: Safari, Chrome, Firefox, Opera, IE9+
+ *
  * @author     Stefan Liden
- * @version    0.7
+ * @version    0.7.1
  * @copyright  Copyright 2012 Stefan Liden
  * @license    Dual licensed under MIT and GPL
  */
@@ -46,7 +48,7 @@
       transform.pre = '-moz-transform:translate(';
       transform.post = ');';
     }
-    else if ('MsTransform' in ele.style) {
+    else if ('msTransform' in ele.style) {
       transform.pre = '-ms-transform:translate(';
       transform.post = ');';
     }
