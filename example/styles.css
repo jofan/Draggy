@@ -1,0 +1,119 @@
+body {
+  background-image:url(img/irongrip.png);
+  color:#fff;
+  font-family:helvetica, arial, sans-serif;
+  margin:0;
+}
+h1 {
+  font-family: Monaco;
+  font-size: 2.5em;
+  font-weight: normal;
+  text-shadow: 4px 4px 4px black;
+  letter-spacing: 8px;
+  margin-bottom:100px;
+  margin-left:250px;
+}
+h2 {
+  border-bottom:1px dashed #757575;
+  clear: both;
+  font-family: Monaco;
+  font-size: 2em;
+  font-style:italic;
+  font-weight: normal;
+  margin:80px 0 25px 0;
+  padding-bottom:4px;
+  text-shadow: 2px 2px 2px black;
+}
+h3 {
+  float:left;
+  font-family: Monaco;
+  font-size: 1.5em;
+  font-weight: normal;
+  text-shadow: 2px 2px 2px black;
+  width:40%;
+}
+h4 {
+  background-color:#000;
+  font-family: Monaco;
+  font-size: 1em;
+  font-weight: normal;
+  margin-top:0;
+  padding: 4px 10px;
+  text-shadow: 2px 2px 2px black;
+}
+code {
+  background-color:#000;
+  font-size:1.2em;
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+  filter:alpha(opacity=5);
+  padding:5px 10px;
+}
+.content {
+  background-image:url(img/gradient.png);
+  background-repeat:no-repeat;
+  margin:0 auto;
+  padding-top:40px;
+  width:800px;
+}
+.subject {
+  clear: both;
+  overflow: auto;
+  margin-bottom:45px;
+}
+.explenation {
+  box-shadow:5px 5px 5px #000;
+  float:left;
+  height:150px;
+  padding:25px 4%;
+  width:52%;
+}
+.logo {
+  position: absolute;
+  top:40px;
+  left:40px;
+}
+.demo {
+  border:1px solid #111;
+  margin-bottom:25px;
+  padding-bottom:15px;
+}
+.demo p {
+  margin:15px;
+}
+.eventarea {
+  padding:15px;
+}
+.bind-box {
+  border:1px dotted #ddd;
+  height:300px;
+  width:800px;
+}
+.drag-obj {
+  /*position:absolute;*/
+  cursor:move;
+  z-index:1;
+  -webkit-user-select:none;
+}
+#noConfigHandle {
+  background-color:#fff;
+  width:50px;
+  height:50px;
+}
+#dragele {
+  background-color:yellow;
+  /*top:100px;*/
+  /*left:200px;*/
+  width:100px;
+  height:100px;
+}
+#dragele2 {
+  background-color:red;
+  /*top:150px;*/
+  /*left:250px;*/
+  width:100px;
+  height:100px;
+}
+.drag-obj.activeDrag {
+  z-index:2;
+}

@@ -7,7 +7,7 @@
  * BROWSER SUPPORT: Safari, Chrome, Firefox, Opera, IE9+
  *
  * @author     Stefan Liden
- * @version    0.7.1
+ * @version    0.8
  * @copyright  Copyright 2012 Stefan Liden
  * @license    Dual licensed under MIT and GPL
  */
@@ -32,6 +32,19 @@
     removeClass: function(ele, classname) {
       var cleaned = new RegExp(new RegExp('(\\s|^)' + classname + '(\\s|$)'));
       ele.className = ele.className.replace(cleaned, '');
+    },
+    // PPK script for getting position of element
+    // http://www.quirksmode.org/js/findpos.html
+    getPosition: function(ele) {
+      var curleft = 0;
+      var curtop = 0;
+      if (ele.offsetParent) {
+        do {
+          curleft += ele.offsetLeft;
+          curtop += ele.offsetTop;
+        } while (ele = ele.offsetParent);
+      }
+      return [curleft,curtop];
     }
   };
 
@@ -44,7 +57,6 @@
       transform.post = ', 0);';
     }
     else if ('MozTransform' in ele.style) {
-      console.log('Eh?');
       transform.pre = '-moz-transform:translate(';
       transform.post = ');';
     }
@@ -83,22 +95,27 @@
 
   window.Draggy = function(attachTo, config) {
     this.attachTo = attachTo;
-    this.config = config || {};
-    this.onChange = config.onChange || function() {};
+    this.config   = config || {};
+    this.onChange = this.config.onChange || function() {};
     this.position = [0,0];
+    this.bindTo   = this.config.bindTo || null;
     this.init();
   };
 
   Draggy.prototype = {
     init: function() {
-      this.ele = (typeof this.attachTo === 'string' ? d.getElementById(this.attachTo) : this.attachTo);
-      this.ele.draggy = this;
-      this.ele.onChange = this.onChange;
-      this.ele.position = this.position || [0, 0];
+      this.ele           = (typeof this.attachTo === 'string' ? d.getElementById(this.attachTo) : this.attachTo);
+      this.ele.draggy    = this;
+      this.ele.onChange  = this.onChange;
+      this.ele.position  = this.position || [0, 0];
       this.ele.restrictX = this.config.restrictX || false;
       this.ele.restrictY = this.config.restrictY || false;
-      this.ele.limitsX = this.config.limitsX || [-9999, 9999];
-      this.ele.limitsY = this.config.limitsY || [-9999, 9999];
+      this.ele.limitsX   = this.config.limitsX || [-9999, 9999];
+      this.ele.limitsY   = this.config.limitsY || [-9999, 9999];
+      this.ele.snapBack  = this.config.snapBack || false;
+      if (this.bindTo) {
+        this.bind(this.bindTo);
+      }
       this.enable();
     },
     // Reinitialize draggy object and move to saved position
@@ -147,6 +164,12 @@
             posX = clientX;
             relativeX = newX;
           }
+          else if (newX < limitsX[0]) {
+            relativeX = limitsX[0];
+          }
+          else if (newX > limitsX[1]) {
+            relativeX = limitsX[1];
+          }
         }
         if (!restrictY) {
           movedY = clientY - posY;
@@ -154,6 +177,12 @@
           if (newY >= limitsY[0] && newY <= limitsY[1]) {
             posY = clientY;
             relativeY = newY;
+          }
+          else if (newY < limitsY[0]) {
+            relativeY = limitsY[0];
+          }
+          else if (newY > limitsY[1]) {
+            relativeY = limitsY[1];
           }
         }
         self.position = [relativeX, relativeY];
@@ -163,7 +192,6 @@
       }
       // Stop moving draggy object, save position and dispatch onDrop event
       function dragEnd (e) {
-        self.pointerPosition = [posX, posY];
         self.draggy.position = self.position;
         util.removeClass(self.draggy.ele, 'activeDrag');
         self.dispatchEvent(onDrop);
@@ -178,6 +206,7 @@
     // Callback is NOT called
     // onDrop event is NOT dispatched
     moveTo: function(x,y) {
+      console.log(this);
       x = this.ele.restrictX ? 0 : x;
       y = this.ele.restrictY ? 0 : y;
       if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
@@ -203,6 +232,31 @@
     reset: function() {
       this.ele.style.cssText = transform.pre + '0, 0' + transform.post;
       this.ele.position = [0,0];
+    },
+    // API method for restricting draggy object to boundaries of an element
+    // Sets x and y limits
+    // Used internally of config option "bindTo" is used
+    bind: function(element) {
+      var ele = (typeof element === 'string' ? d.getElementById(element) : element),
+          draggyPos, elePos, draggyWidth, eleWidth, draggyHeight, eleHeight,
+          xLimit1, xLimit2, yLimit1, yLimit2;
+
+      if (ele) {
+        draggyPos   = util.getPosition(this.ele),
+        elePos      = util.getPosition(ele),
+        draggyWidth = parseInt(this.ele.offsetWidth, 10),
+        eleWidth    = parseInt(ele.offsetWidth, 10),
+        draggyHeight = parseInt(this.ele.offsetHeight, 10),
+        eleHeight    = parseInt(ele.offsetHeight, 10),
+        xLimit1     = elePos[0] - draggyPos[0],
+        yLimit1     = elePos[1] - draggyPos[1],
+        xLimit2     = (eleWidth - draggyWidth) - Math.abs(xLimit1),
+        yLimit2     = (eleHeight - draggyHeight) - Math.abs(yLimit1);
+
+        this.ele.limitsX = [xLimit1, xLimit2];
+        this.ele.limitsY = [yLimit1, yLimit2];
+
+      }
     }
   };
 
