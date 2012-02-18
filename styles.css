@@ -1,0 +1,185 @@
+body {
+  background-image:url(img/irongrip.jpg);
+  color:#fff;
+  font-family:helvetica, arial, sans-serif;
+  margin:0;
+}
+h1 {
+  font-family: Monaco;
+  font-size: 2.5em;
+  font-weight: normal;
+  text-shadow: 4px 4px 4px black;
+  letter-spacing: 8px;
+  margin-bottom:100px;
+  margin-left:250px;
+}
+h2 {
+  border-bottom:1px dashed #757575;
+  clear: both;
+  font-family: Monaco;
+  font-size: 2em;
+  font-style:italic;
+  font-weight: normal;
+  margin:80px 0 25px 0;
+  padding-bottom:4px;
+  text-shadow: 2px 2px 2px black;
+}
+h3 {
+  float:left;
+  font-family: Monaco;
+  font-size: 1.5em;
+  font-weight: normal;
+  text-shadow: 2px 2px 2px black;
+  width:36%;
+}
+h4 {
+  background-color:#000;
+  font-family: Monaco;
+  font-size: 1em;
+  font-weight: normal;
+  margin-top:0;
+  padding: 4px 10px;
+  text-shadow: 2px 2px 2px black;
+}
+p {
+  letter-spacing:0.05em;
+  line-height:1.5;
+}
+code {
+  background-color:#000;
+  font-size:1.2em;
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+  filter:alpha(opacity=5);
+  padding:5px 10px;
+}
+dd {
+  color:#ccc;
+  margin:12px 25px 25px;
+}
+.what-is-it {
+  margin-top:80px;
+}
+.how-use-it {
+  margin-top:65px;
+}
+.where-use-it {
+  margin-top:20px;
+}
+.content {
+  background-image:url(img/gradient.png);
+  background-repeat:no-repeat;
+  margin:0 auto;
+  padding-top:40px;
+  width:800px;
+}
+.subject {
+  clear: both;
+  overflow: auto;
+  margin-bottom:45px;
+}
+.explanation {
+  float:left;
+  line-height:1.5;
+  padding:0;
+  width:60%;
+}
+.browsers {
+  margin-left:45px;
+}
+.browser-versions {
+  list-style: none;
+  margin-left:8px;
+  margin-top:-4px;
+}
+.browser-versions li {
+  color:#777;
+  float:left;
+  text-align:center;
+  width:71px;
+}
+.logo {
+  position: absolute;
+  top:40px;
+  left:40px;
+}
+.demo {
+  border:1px solid #111;
+  margin-bottom:25px;
+  padding-bottom:15px;
+}
+.demo p {
+  margin:15px;
+}
+.eventarea {
+  padding:15px;
+}
+#bindExample {
+  height:150px;
+  margin-left:30px;
+  width:700px;
+}
+.bind-box {
+  border:1px dotted #999; 
+}
+.drag-obj {
+  width:70px;
+  height:70px;
+  cursor:move;
+  z-index:1;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -o-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}
+.drag-obj.activeDrag {
+  z-index:2;
+}
+.marker {
+  background-color:transparent;
+  background-image:url(img/marker.png);
+  background-repeat:no-repeat;
+  width:70px;
+  height:70px;
+}
+.marker.activeDrag {
+  background-position:-70px 0;
+}
+#noConfigHandle {
+}
+#boundEle {
+}
+.slider-demo {
+  height:150px;
+}
+#sliderDemo {
+  background-image:url(img/scale.png);
+  background-position:-25px 0;
+  background-repeat:no-repeat;
+  height:30px;
+  width:550px;
+  padding: 0;
+  margin-left:15px;
+  margin-top:25px;
+}
+#sliderValue {
+  background-color:#fff;
+  border-radius:20px;
+  color:#000;
+  float:right;
+  margin-right:80px;
+  padding:3px 6px;
+  text-align:center;
+  width:60px;
+  box-shadow:2px 2px 4px #333 inset;
+}
+#slideHandle {
+  background:transparent url(img/handle.png) no-repeat 0 0;
+  cursor: pointer;
+  opacity: 0.93;
+  -moz-opacity: 0.93;
+  filter:alpha(opacity=9);
+  width:48px;
+  height:48px;
+}
