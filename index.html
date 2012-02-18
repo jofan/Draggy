@@ -1,1 +1,158 @@
-My GitHub Page
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  
+    <title>Draggy example</title>
+
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    
+    <div class="content">
+      <!-- <img src="img/hand.png" class="logo" alt="" /> -->
+      <h1>draggy.js</h1>
+
+      <div class="subject">
+        <h3 class="what-is-it">What is it?</h3>
+        <div class="explanation">
+          <p>draggy.js is a small JavaScript library for creating draggable elements. It has been especially designed for JavaScript applications (sinle-page apps) where DOM elements might be removed but state should be preserved.</p>
+          <p>draggy.js has no JavaScript dependencies, but require browsers to support CSS3 transform (translate).</p>
+        </div>
+      </div>
+
+      <div class="subject">
+        <h3 class="how-use-it">How do I use it?</h3>
+        <div class="explanation">
+          <p>Add draggy.js or draggy.min.js to your html page(s) and call the Draggy constructor when you want to make an element draggable.</p>
+          <p>Use the configuration options to set up boundaries and restrictions, and then the API to manipulate it.</p>
+        </div>
+      </div>
+
+      <div class="subject">
+        <h3 class="where-use-it">Where can I use it?</h3>
+        <div class="explanation">
+          <img src="img/browser_logos-64.png" class="browsers" alt="Chrome, Firefox, Opera, Safari, Internet Explorer" />
+          <ul class="browser-versions">
+            <li>17</li>
+            <li>9</li>
+            <li>11</li>
+            <li>5</li>
+            <li>9</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>Constructor</h2>
+      <p>You use the following syntax to create a new draggy object:</p>
+      <code>new Draggy(element, config)</code>
+      <h5>PARAMETERS</h5>
+      <dl>
+        <dt>element (required)</dt>
+        <dd>DOM element or id of the draggy object</dd>
+        <dt>config (optional)</dt>
+        <dd>Optional configuration object</dd>
+      </dl>
+
+      <h2>Configuration Options</h2>
+      <p>Following configuration options are available when creating the draggy object:</p>
+      <dl>
+        <dt><code>bindTo (string or element)</code></dt>
+        <dd>DOM element (or id of) to which the draggy object is constrained by</dd>
+        <dt><code>limitsX (array with start and end values (numbers))</code></dt>
+        <dd>Manual setting limiting horizontal movement</dd>
+        <dt><code>limitsY (array with start and end values (numbers))</code></dt>
+        <dd>Manual setting limiting vertical movement</dd>
+        <dt><code>onChange (function)</code></dt>
+        <dd>Callback that will be called when the object is dragged</dd>
+        <dt><code>restrictX (boolean)</code></dt>
+        <dd>Make it impossible to move the object horizontally</dd>
+        <dt><code>restrictY (boolean)</code></dt>
+        <dd>Make it impossible to move the object vertically</dd>
+      </dl>
+
+      <h2>API</h2>
+      <p>Once a draggy object has been created it can be manipulated with the following API:</p>
+      <dl>
+        <dt><code>ele</code></dt>
+        <dd>Returns the DOM element of the draggy object</dd>
+        <dt><code>position</code></dt>
+        <dd>Current position of the element. Returns array with x and y value</dd>
+        <dt><code>bind(element)</code></dt>
+        <dd>Restrict draggy object to boundaries of an element</dd>
+        <dt><code>disable()</code></dt>
+        <dd>Disable dragging functionality of object</dd>
+        <dt><code>enable()</code></dt>
+        <dd>Enable dragging functionality of object</dd>
+        <dt><code>moveTo(x, y)</code></dt>
+        <dd>Move the object to supplied x and y values. Will not call <em>onChange</em> callback or dispatch the <em>onDrop</em> event</dd>
+        <dt><code>reInit()</code></dt>
+        <dd>Called when it is necessary to recreate state. Will set object to last position, call <em>onChange</em> callback and dispatch the <em>onDrop</em> event</dd>
+        <dt><code>reset()</code></dt>
+        <dd>Reset object to starting point. Will not call <em>onChange</em> callback or dispatch the <em>onDrop</em> event</dd>
+        <dt><code>setTo(x, y)</code></dt>
+        <dd>Move the object to supplied x and y values. Will call <em>onChange</em> callback and dispatch the <em>onDrop</em> event</dd>
+      </dl>
+
+      <h2>onDrop Event</h2>
+      <p>Draggy will dispatch a custom event, <em>onDrop</em>, when a draggy object is released. The event is dispatched from the element having been dragged, and this element will contain information about position and also a reference back to the draggy object.</p>
+      <p>This means that in an event listener for <em>onDrop</em>, the <em>event.target</em> will be the dragged element. From this element you can find out the position, <em>event.target.position</em>, and the draggy object, <em>event.target.draggy</em>.</p>
+
+      <h2>Examples</h2>
+
+      <div class="demo">
+        <h4>No configuration</h4>
+        <p>If providing no configuration, the elements will be freely draggable.</p>
+        <div class="eventarea">
+          <div id="noConfigHandle" class="drag-obj marker"></div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <h4>Bind to element</h4>
+        <p>When binding to an element the draggy object will be restricted to move within the element's boundaries.</p>
+        <div id="bindExample" class="eventarea bind-box">
+          <div id="boundEle" class="drag-obj marker"></div>
+        </div>
+      </div>
+
+      <div id="horzDemo" class="demo">
+        <h4>Restriced to horizontal movement</h4>
+        <p>It is possible to restrict movement to horizontal or vertical only.</p>
+        <div class="eventarea">
+          <div id="horzEle" class="drag-obj marker"></div>
+        </div>
+      </div>
+
+      <div class="demo slider-demo">
+        <h4>Horizontal slider with onChange callback</h4>
+        <p>It is very easy to create sliders (and getting their values) with draggy.js.</p>
+        <div id="sliderValue">0</div>
+        <div id="sliderDemo" class="eventarea">
+          <!-- Add "draggable="false" to prevent buggy HTML5 drag -->
+          <div id="slideHandle" class="drag-obj" draggable="false"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <a href="https://github.com/jofan/draggy">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/4c7dc970b89fd04b81c8e221ba88ff99a06c6b61/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" alt="Fork me on GitHub">
+    </a>
+
+    <script src="../src/draggy.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+      (function() {
+        var sliderValue = document.getElementById('sliderValue');
+        function updateSliderValue(x, y) {
+          var value = Math.round(x / 5);
+          sliderValue.innerHTML = value;
+        }
+        window.no_config = new Draggy('noConfigHandle');
+        window.bind_demo = new Draggy('boundEle', {bindTo: 'bindExample'} );
+        window.horz_demo = new Draggy('horzEle', {restrictY:true, bindTo: "horzDemo"} );
+        window.slider_demo = new Draggy('slideHandle', {onChange: updateSliderValue, restrictY: true, bindTo: "sliderDemo"} );
+      })();
+    </script>
+  </body>
+</html>
