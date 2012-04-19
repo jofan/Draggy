@@ -1,5 +1,5 @@
 body {
-  background-image:url(img/irongrip.png);
+  background-image:url(img/irongrip.jpg);
   color:#fff;
   font-family:helvetica, arial, sans-serif;
   margin:0;
@@ -30,7 +30,7 @@ h3 {
   font-size: 1.5em;
   font-weight: normal;
   text-shadow: 2px 2px 2px black;
-  width:40%;
+  width:36%;
 }
 h4 {
   background-color:#000;
@@ -41,6 +41,10 @@ h4 {
   padding: 4px 10px;
   text-shadow: 2px 2px 2px black;
 }
+p {
+  letter-spacing:0.05em;
+  line-height:1.5;
+}
 code {
   background-color:#000;
   font-size:1.2em;
@@ -48,6 +52,19 @@ code {
   -moz-opacity: 0.5;
   filter:alpha(opacity=5);
   padding:5px 10px;
+}
+dd {
+  color:#ccc;
+  margin:12px 25px 25px;
+}
+.what-is-it {
+  margin-top:80px;
+}
+.how-use-it {
+  margin-top:65px;
+}
+.where-use-it {
+  margin-top:20px;
 }
 .content {
   background-image:url(img/gradient.png);
@@ -61,12 +78,25 @@ code {
   overflow: auto;
   margin-bottom:45px;
 }
-.explenation {
-  box-shadow:5px 5px 5px #000;
+.explanation {
   float:left;
-  height:150px;
-  padding:25px 4%;
-  width:52%;
+  line-height:1.5;
+  padding:0;
+  width:60%;
+}
+.browsers {
+  margin-left:45px;
+}
+.browser-versions {
+  list-style: none;
+  margin-left:8px;
+  margin-top:-4px;
+}
+.browser-versions li {
+  color:#777;
+  float:left;
+  text-align:center;
+  width:71px;
 }
 .logo {
   position: absolute;
@@ -84,36 +114,72 @@ code {
 .eventarea {
   padding:15px;
 }
+#bindExample {
+  height:150px;
+  margin-left:30px;
+  width:700px;
+}
 .bind-box {
-  border:1px dotted #ddd;
-  height:300px;
-  width:800px;
+  border:1px dotted #999; 
 }
 .drag-obj {
-  /*position:absolute;*/
+  width:70px;
+  height:70px;
   cursor:move;
   z-index:1;
   -webkit-user-select:none;
-}
-#noConfigHandle {
-  background-color:#fff;
-  width:50px;
-  height:50px;
-}
-#dragele {
-  background-color:yellow;
-  /*top:100px;*/
-  /*left:200px;*/
-  width:100px;
-  height:100px;
-}
-#dragele2 {
-  background-color:red;
-  /*top:150px;*/
-  /*left:250px;*/
-  width:100px;
-  height:100px;
+  -moz-user-select:none;
+  -o-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
 }
 .drag-obj.activeDrag {
   z-index:2;
+}
+.marker {
+  background-color:transparent;
+  background-image:url(img/marker.png);
+  background-repeat:no-repeat;
+  width:70px;
+  height:70px;
+}
+.marker.activeDrag {
+  background-position:-70px 0;
+}
+#noConfigHandle {
+}
+#boundEle {
+}
+.slider-demo {
+  height:150px;
+}
+#sliderDemo {
+  background-image:url(img/scale.png);
+  background-position:-25px 0;
+  background-repeat:no-repeat;
+  height:30px;
+  width:550px;
+  padding: 0;
+  margin-left:15px;
+  margin-top:25px;
+}
+#sliderValue {
+  background-color:#fff;
+  border-radius:20px;
+  color:#000;
+  float:right;
+  margin-right:80px;
+  padding:3px 6px;
+  text-align:center;
+  width:60px;
+  box-shadow:2px 2px 4px #333 inset;
+}
+#slideHandle {
+  background:transparent url(img/handle.png) no-repeat 0 0;
+  cursor: pointer;
+  opacity: 0.93;
+  -moz-opacity: 0.93;
+  filter:alpha(opacity=9);
+  width:48px;
+  height:48px;
 }
