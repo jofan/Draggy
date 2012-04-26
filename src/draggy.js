@@ -2,20 +2,19 @@
  * draggy.js
  *
  * A JavaScript/CSS3 microlibrary for moving elements in Webkit browsers.
- * TODO: Support browsers other than webkit, that supports CSS3 translate
  *
- * BROWSER SUPPORT: Safari, Chrome, Firefox, Opera, IE9+
+ * BROWSER SUPPORT: Safari, Chrome, Firefox, Opera, IE9
  *
  * @author     Stefan Liden
- * @version    0.8
- * @copyright  Copyright 2012 Stefan Liden
+ * @version    0.9
+ * @copyright  Copyright 2012 Stefan Liden (Jofan)
  * @license    Dual licensed under MIT and GPL
  */
 
 (function() {
   'use strict';
 
-  // Some simple utility function to update classes
+  // Some simple utility functions
   var util = {
     addClass: function(ele, classname) {
       if (!this.hasClass(ele, classname)) {
@@ -202,7 +201,6 @@
     },
     // API method for moving the draggy object programatically
     moveTo: function(x,y) {
-      console.log(this);
       x = this.ele.restrictX ? 0 : x;
       y = this.ele.restrictY ? 0 : y;
       if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
@@ -244,4 +242,4 @@
     }
   };
 
-})();
+}());
