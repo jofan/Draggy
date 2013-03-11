@@ -9,10 +9,11 @@ See [Draggy documentation and examples](file:///Library/WebServer/Documents/Drag
 
 ## Change log
 ### Version 0.9.1 2013-03-11
-Added README file (this)
-Simplified browser compatibility code
-Fixed bug in bind method
-Replaced GitHub image code, as they have changed providers (?)
+
+* Added README file (this)
+* Simplified browser compatibility code
+* Fixed bug in bind method
+* Replaced GitHub image code, as they have changed providers (?)
 
 ##License
 (The MIT License)
