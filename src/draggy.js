@@ -225,7 +225,7 @@
     },
     // API method for resetting position of draggy object
     reset: function() {
-      this.ele.style.cssText = transform.pre + '0, 0);';
+      this.ele.style.cssText = prefix + 'transform:translate(0, 0);';
       this.ele.position = [0,0];
     },
     // API method for restricting draggy object to boundaries of an element
