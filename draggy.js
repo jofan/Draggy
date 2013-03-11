@@ -1,14 +1,14 @@
 /**
  * draggy.js
  *
- * A JavaScript/CSS3 microlibrary for moving elements in Webkit browsers.
+ * A JavaScript/CSS3 microlibrary for moving elements.
  *
  * BROWSER SUPPORT: Safari, Chrome, Firefox, Opera, IE9
  *
  * @author     Stefan Liden
- * @version    0.9
+ * @version    0.9.1
  * @copyright  Copyright 2012 Stefan Liden (Jofan)
- * @license    Dual licensed under MIT and GPL
+ * @license    MIT
  */
 
 (function() {
@@ -48,30 +48,26 @@
   };
 
   // Browser compatibility
-  var transform = {}; 
-  (function() {
-    var ele = document.createElement('div');
-    if ('WebkitTransform' in ele.style) {
-      transform.pre = '-webkit-transform:translate3d(';
-      transform.post = ', 0);';
-    }
-    else if ('MozTransform' in ele.style) {
-      transform.pre = '-moz-transform:translate(';
-      transform.post = ');';
-    }
-    else if ('msTransform' in ele.style) {
-      transform.pre = '-ms-transform:translate(';
-      transform.post = ');';
-    }
-    else if ('OTransform' in ele.style) {
-      transform.pre = '-o-transform:translate(';
-      transform.post = ');';
-    }
-    else {
-      transform.pre = 'transform:translate(';
-      transform.post = ');';
-    }
-  }()); 
+  var ele = document.createElement('div'),
+      style = ele.style,
+      prefix;
+
+
+  if ('transform' in style) {
+    prefix = '';
+  }
+  else if ('WebkitTransform' in style) {
+    prefix = '-webkit-';
+  }
+  else if ('MozTransform' in style) {
+    prefix = '-moz-';
+  }
+  else if ('msTransform' in style) {
+    prefix = '-ms-';
+  }
+  else if ('OTransform' in style) {
+    prefix = '-o-';
+  }
 
   var d = document,
       isTouch = 'ontouchstart' in window,
@@ -143,6 +139,7 @@
           newX, newY,
           self = this; // The DOM element
 
+
       util.addClass(this, 'activeDrag');
 
       d.addEventListener(events.move, dragMove);
@@ -184,8 +181,8 @@
             relativeY = limitsY[1];
           }
         }
-        self.position = [relativeX, relativeY];
-        self.style.cssText = transform.pre + relativeX + 'px,' + relativeY + 'px' + transform.post;
+        self.draggy.position = self.position = [relativeX, relativeY];
+        self.style.cssText = prefix + 'transform:translate(' + relativeX + 'px,' + relativeY + 'px);';
         self.onChange(relativeX, relativeY);
         self.dispatchEvent(onDrag);
       }
@@ -209,7 +206,7 @@
       y = this.ele.restrictY ? 0 : y;
       if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
       if (y < this.ele.limitsY[0] || y > this.ele.limitsY[1]) { return; }
-      this.ele.style.cssText = transform.pre + x + 'px,' + y + 'px' + transform.post;
+      this.ele.style.cssText = prefix + 'transform:translate(' + x + 'px,' + y + 'px);';
       this.ele.position = this.position = [x,y];
     },
     // API method for setting the draggy object at a certain point
@@ -221,35 +218,41 @@
       y = this.ele.restrictY ? 0 : y;
       if (x < this.ele.limitsX[0] || x > this.ele.limitsX[1]) { return; }
       if (y < this.ele.limitsY[0] || y > this.ele.limitsY[1]) { return; }
-      this.ele.style.cssText = transform.pre + x + 'px,' + y + 'px' + transform.post;
+      this.ele.style.cssText = prefix + 'transform:translate(' + x + 'px,' + y + 'px);';
       this.ele.onChange(x, y);
       this.ele.dispatchEvent(onDrop);
       this.ele.position = this.position = [x,y];
     },
     // API method for resetting position of draggy object
     reset: function() {
-      this.ele.style.cssText = transform.pre + '0, 0' + transform.post;
+      this.ele.style.cssText = transform.pre + '0, 0);';
       this.ele.position = [0,0];
     },
     // API method for restricting draggy object to boundaries of an element
     // Sets x and y limits
-    // Used internally of config option "bindTo" is used
+    // Used internally if config option "bindTo" is used
     bind: function(element) {
       var ele = (typeof element === 'string' ? d.getElementById(element) : element),
           draggyPos, elePos, draggyWidth, eleWidth, draggyHeight, eleHeight,
-          xLimit1, xLimit2, yLimit1, yLimit2;
+          xLimit1,  xLimit2, yLimit1, yLimit2;
+
+      xLimit1 = xLimit2 = yLimit1 = yLimit2 = 0;
 
       if (ele) {
-        draggyPos   = util.getPosition(this.ele),
-        elePos      = util.getPosition(ele),
-        draggyWidth = parseInt(this.ele.offsetWidth, 10),
-        eleWidth    = parseInt(ele.offsetWidth, 10),
-        draggyHeight = parseInt(this.ele.offsetHeight, 10),
-        eleHeight    = parseInt(ele.offsetHeight, 10),
-        xLimit1     = elePos[0] - draggyPos[0],
-        yLimit1     = elePos[1] - draggyPos[1],
-        xLimit2     = (eleWidth - draggyWidth) - Math.abs(xLimit1),
-        yLimit2     = (eleHeight - draggyHeight) - Math.abs(yLimit1);
+        draggyPos    = util.getPosition(this.ele);
+        elePos       = util.getPosition(ele);
+        draggyWidth  = parseInt(this.ele.offsetWidth, 10);
+        eleWidth     = parseInt(ele.offsetWidth, 10);
+        draggyHeight = parseInt(this.ele.offsetHeight, 10);
+        eleHeight    = parseInt(ele.offsetHeight, 10);
+        if (!this.ele.restrictX) {
+          xLimit1      = elePos[0] - draggyPos[0];
+          xLimit2      = (eleWidth - draggyWidth) - Math.abs(xLimit1);
+        }
+        if (!this.ele.restrictY) {
+          yLimit1      = elePos[1] - draggyPos[1];
+          yLimit2      = (eleHeight - draggyHeight) - Math.abs(yLimit1);
+        }
 
         this.ele.limitsX = [xLimit1, xLimit2];
         this.ele.limitsY = [yLimit1, yLimit2];
