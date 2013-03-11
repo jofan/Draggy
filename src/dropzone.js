@@ -14,13 +14,17 @@
  (function() {
   'use strict';
 
-  window.DropZone = function(id, config) {
+  var d = document;
 
+  window.DropZone = function(id, config) {
+    this.id = id;
+    this.init();
   }
 
   window.DropZone.prototype = {
     init: function() {
-
+      this.ele = (typeof this.id === 'string' ? d.getElementById(this.id) : this.id);
+      this.enable();
     },
     reInit: function() {
       this.init();
@@ -29,11 +33,14 @@
 
     },
     enable: function() {
-
+      d.addEventListener('onDrag', this.checkIfActive);
     },
     // Remove and reset Draggy objects
     reset: function() {
-
+    },
+    checkIfActive: function(event) {
+      var obj = event.target.draggy;
+      // console.log(obj.position[0]);
     }
   }
 
