@@ -5,7 +5,7 @@ It has been especially designed for JavaScript applications (sinle-page apps) wh
 draggy.js has no dependencies, but require browsers to support CSS3 transform (translate).
 
 ## Docs
-See [Draggy documentation and examples](file:///Library/WebServer/Documents/Draggy/example/index.html)
+See [Draggy documentation and examples](http://jofan.github.com/Draggy/)
 
 ## Change log
 ### Version 0.9.1 2013-03-11
