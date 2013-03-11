@@ -143,15 +143,20 @@
     <script src="draggy.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
       (function() {
+        // Get the element that will display the slider value (last example)
         var sliderValue = document.getElementById('sliderValue');
+        // The onChange function used in slider example (last example)
         function updateSliderValue(x, y) {
           var value = Math.round(x / 5);
           sliderValue.innerHTML = value;
         }
+
+        // Creating and configuring Draggy examples
         window.no_config = new Draggy('noConfigHandle');
         window.bind_demo = new Draggy('boundEle', {bindTo: 'bindExample'} );
         window.horz_demo = new Draggy('horzEle', {restrictY:true, bindTo: "horzDemo"} );
         window.slider_demo = new Draggy('slideHandle', {onChange: updateSliderValue, restrictY: true, bindTo: "sliderDemo"} );
+        
       })();
     </script>
   </body>
