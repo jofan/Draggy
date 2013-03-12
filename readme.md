@@ -1,6 +1,6 @@
 #Draggy
 draggy.js is a small JavaScript library for creating draggable elements.
-It has been especially designed for JavaScript applications (sinle-page apps) where DOM elements might be removed but state should be preserved.
+It has been especially designed for JavaScript applications (single-page apps) where DOM elements might be removed but state should be preserved.
 
 draggy.js has no dependencies, but require browsers to support CSS3 transform (translate).
 
