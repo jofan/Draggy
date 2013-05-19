@@ -9,7 +9,10 @@
     "draggable",
     "drag"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "DamonOehlman/stylar": "*",
+    "component/classes": "*"
+  },
   "development": {},
   "license": "MIT",
   "main": "lib/draggy.js",
