@@ -10,6 +10,7 @@
     "drag"
   ],
   "dependencies": {
+    "DamonOehlman/stylar": "*",
     "component/classes": "*"
   },
   "development": {},
