@@ -6,7 +6,7 @@
  * BROWSER SUPPORT: Safari, Chrome, Firefox, Opera, IE9
  *
  * @author     Stefan Liden
- * @version    0.9.1
+ * @version    0.9.3
  * @copyright  Copyright 2012 Stefan Liden (Jofan)
  * @license    MIT
  */
@@ -139,6 +139,8 @@
           newX, newY,
           self = this; // The DOM element
 
+      // Allow nested draggable elements
+      e.stopPropagation();
 
       util.addClass(this, 'activeDrag');
 
@@ -220,8 +222,8 @@
       if (y < this.ele.limitsY[0] || y > this.ele.limitsY[1]) { return; }
       this.ele.style.cssText = prefix + 'transform:translate(' + x + 'px,' + y + 'px);';
       this.ele.onChange(x, y);
-      this.ele.dispatchEvent(onDrop);
       this.ele.position = this.position = [x,y];
+      this.ele.dispatchEvent(onDrop);
     },
     // API method for resetting position of draggy object
     reset: function() {

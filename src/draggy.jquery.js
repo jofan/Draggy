@@ -212,8 +212,8 @@ if (!__lib && window.Zepto) {
       if (y < this.ele.limitsY[0] || y > this.ele.limitsY[1]) { return; }
       this.ele.style.cssText = transform.pre + x + 'px,' + y + 'px' + transform.post;
       this.ele.onChange(x, y);
-      this.ele.dispatchEvent(onDrop);
       this.ele.position = this.position = [x,y];
+      this.ele.dispatchEvent(onDrop);
     },
     // API method for resetting position of draggy object
     reset: function() {

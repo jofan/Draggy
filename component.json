@@ -9,7 +9,9 @@
     "draggable",
     "drag"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "component/classes": "*"
+  },
   "development": {},
   "license": "MIT",
   "main": "lib/draggy.js",
