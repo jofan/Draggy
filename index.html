@@ -24,7 +24,7 @@
       <div class="subject">
         <h3 class="how-use-it">How do I use it?</h3>
         <div class="explanation">
-          <p>Add draggy.js or draggy.min.js to your html page(s) and call the Draggy constructor when you want to make an element draggable.</p>
+          <p>Add draggy.js to your html page(s) and call the Draggy constructor when you want to make an element draggable.</p>
           <p>Use the configuration options to set up boundaries and restrictions, and then the API to manipulate it.</p>
         </div>
       </div>
@@ -80,6 +80,8 @@
         <dd>Current position of the element. Returns array with x and y value</dd>
         <dt><code>bind(element)</code></dt>
         <dd>Restrict draggy object to boundaries of an element</dd>
+        <dt><code>destroy()</code></dt>
+        <dd>Remove Draggy from element. Should be called before removing element from DOM.</dd>
         <dt><code>disable()</code></dt>
         <dd>Disable dragging functionality of object</dd>
         <dt><code>enable()</code></dt>
@@ -94,8 +96,14 @@
         <dd>Move the object to supplied x and y values. Will call <em>onChange</em> callback and dispatch the <em>onDrop</em> event</dd>
       </dl>
 
-      <h2>onDrop Event</h2>
-      <p>Draggy will dispatch a custom event, <em>onDrop</em>, when a draggy object is released. The event is dispatched from the element having been dragged, and this element will contain information about position and also a reference back to the draggy object.</p>
+      <h2>Events</h2>
+      <dl>
+        <dt><code>onDrag</code></dt>
+        <dd>Called when dragging elemement</dd>
+        <dt><code>onDrop</code></dt>
+        <dd>Called when releasing element</dd>
+      </dl>
+      <p>Draggy will dispatch a custom events when a draggy object is dragged or released. The event is dispatched from the active element, and this element will contain information about position and also a reference back to the draggy object.</p>
       <p>This means that in an event listener for <em>onDrop</em>, the <em>event.target</em> will be the dragged element. From this element you can find out the position, <em>event.target.position</em>, and the draggy object, <em>event.target.draggy</em>.</p>
 
       <h2>Examples</h2>
@@ -104,7 +112,7 @@
         <h4>No configuration</h4>
         <p>If providing no configuration, the elements will be freely draggable.</p>
         <div class="eventarea">
-          <div id="noConfigHandle" class="drag-obj marker"></div>
+          <div id="noConfigHandle" class="drag-obj marker" style="-webkit-transform:translate3d(100px, -50px, 0)"></div>
         </div>
       </div>
 
@@ -140,7 +148,7 @@
       <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
     </a>
 
-    <script src="draggy.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src/draggy.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
       (function() {
         // Get the element that will display the slider value (last example)
