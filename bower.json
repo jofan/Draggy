@@ -1,0 +1,27 @@
+{
+  "name": "draggy",
+  "version": "0.9.9",
+  "homepage": "https://github.com/jofan/Draggy",
+  "authors": [
+    "Stefan Lidén <stefan.liden@gmail.com>"
+  ],
+  "description": "Small util library making elements draggable",
+  "main": "src/draggy.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "library",
+    "draggable",
+    "draggy",
+    "element"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -6,8 +6,8 @@
  * BROWSER SUPPORT: Safari, Chrome, Firefox, Opera, IE9
  *
  * @author     Stefan Liden
- * @version    0.9.3
- * @copyright  Copyright 2012 Stefan Liden (Jofan)
+ * @version    0.9.9
+ * @copyright  Copyright 2012-2015 Stefan Liden (Jofan)
  * @license    MIT
  */
 
@@ -96,13 +96,26 @@
     this.bindTo   = this.config.bindTo || null;
     this.init();
   };
+  
+  Draggy.getPosition = function(ele) {
+    if(!window.getComputedStyle) return;
+    var style = getComputedStyle(ele),
+        transform = style.transform || style.webkitTransform || style.mozTransform || style.msTransform;
+    var mat = transform.match(/^matrix3d\((.+)\)$/);
+    var x, y;
+    if(mat) return parseFloat(mat[1].split(', ')[13]);
+    mat = transform.match(/^matrix\((.+)\)$/);
+    x = mat ? parseFloat(mat[1].split(', ')[4]) : 0;
+    y = mat ? parseFloat(mat[1].split(', ')[5]) : 0;
+    return [x, y];
+  };
 
   Draggy.prototype = {
     init: function() {
       this.ele           = (typeof this.attachTo === 'string' ? d.getElementById(this.attachTo) : this.attachTo);
       this.ele.draggy    = this;
       this.ele.onChange  = this.onChange;
-      this.ele.position  = this.position || [0, 0];
+      this.ele.position  = Draggy.getPosition(this.ele);
       this.ele.restrictX = this.config.restrictX || false;
       this.ele.restrictY = this.config.restrictY || false;
       this.ele.limitsX   = this.config.limitsX || [-9999, 9999];
@@ -112,6 +125,12 @@
         this.bind(this.bindTo);
       }
       this.enable();
+    },
+    // Completely removing Draggy from element
+    destroy: function() {
+      this.disable();
+      this.ele.draggy = null;
+      this.ele = null;
     },
     // Reinitialize draggy object and move to saved position
     reInit: function() {

@@ -8,6 +8,11 @@ draggy.js has no dependencies, but require browsers to support CSS3 transform (t
 See [Draggy documentation and examples](http://jofan.github.com/Draggy/)
 
 ## Change log
+### Version 0.9.9 2015-03-10
+
+* Added #destroy method
+* Properly captures predefined x and y values of the element
+
 ### Version 0.9.1 2013-03-11
 
 * Added README file (this)
@@ -18,7 +23,7 @@ See [Draggy documentation and examples](http://jofan.github.com/Draggy/)
 ##License
 (The MIT License)
 
-Copyright (c) 2013 Stefan Liden <stefan@jofanmedia.com>
+Copyright (c) 2015 Stefan Liden <stefan@jofanmedia.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
